@@ -1,5 +1,3 @@
-package Fahrkartenautomat;
-
 import java.util.Scanner;
 
 class Fahrkartenautomat {

@@ -1,6 +1,6 @@
 package Fahrkartenautomat;
 import java.util.Scanner; 
-public class A31_ScannerDemo {
+    public class A31_ScannerDemo {
    public static void main(String[] args) {
         int ganzzahl;
         double kommazahl;
