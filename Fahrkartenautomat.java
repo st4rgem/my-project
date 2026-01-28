@@ -1,23 +1,40 @@
 import java.util.Scanner;
 
 class Fahrkartenautomat {
-    /*
-     * A5.3: Wiederholung der Eingabe der Ticketanzahl
+    /**
+     * A5.4: Fahrkartenauswahl
      */
     public static void main(String[] args) {
 
         Scanner tastatur = new Scanner(System.in);
+        int ticketWahl;
         int anzahlTickets;
-        double TicketPreis;
-        double eingezahlterGesamtbetrag;
+        double ticketPreis = 0.0;
+        double eingezahlterGesamtbetrag = 0.0;
         double eingeworfeneMuenze;
         double rueckgabebetrag;
         double nochZuZahlen;
 
-        System.out.print("TicketPreis (Euro): ");
-        TicketPreis = tastatur.nextDouble();
+        System.out.println("Wählen Sie ihre Wunschfahrkarte für Berlin AB aus:");
+        System.out.println("  Kurzstrecke AB [2,00 EUR] (1)");
+        System.out.println("  Einzelfahrschein AB [3,00 EUR] (2)");
+        System.out.println("  Tageskarte AB [8,80 EUR] (3)");
+        System.out.println("  4-Fahrten-Karte AB [9,40 EUR] (4)");
 
-        // Eingabe der Ticketanzahl mit Validierung
+        // Ticketart auswählen
+        do {
+            System.out.print("Ihre Wahl: ");
+            ticketWahl = tastatur.nextInt();
+            switch (ticketWahl) {
+                case 1 -> ticketPreis = 2.00;
+                case 2 -> ticketPreis = 3.00;
+                case 3 -> ticketPreis = 8.80;
+                case 4 -> ticketPreis = 9.40;
+                default -> System.out.println(">> falsche Eingabe <<");
+            }
+        } while (ticketWahl < 1 || ticketWahl > 4);
+
+        // Anzahl der Tickets eingeben (1-10)
         do {
             System.out.print("Anzahl der Tickets (1-10): ");
             anzahlTickets = tastatur.nextInt();
@@ -26,33 +43,31 @@ class Fahrkartenautomat {
             }
         } while (anzahlTickets < 1 || anzahlTickets > 10);
 
-        TicketPreis = TicketPreis * anzahlTickets;
+        ticketPreis *= anzahlTickets;
 
-        eingezahlterGesamtbetrag = 0.0;
-        nochZuZahlen = 0.0;
-        while (eingezahlterGesamtbetrag < TicketPreis) {
-            nochZuZahlen = TicketPreis - eingezahlterGesamtbetrag;
-            System.out.printf("Noch zu zahlen: %.2f Euro\n", nochZuZahlen);
-            System.out.print("Eingabe (0.05, 0.10, 0.20, 0.50, 1, 2, 5, 10, 20): ");
+        // Bezahlvorgang
+        while (eingezahlterGesamtbetrag < ticketPreis) {
+            nochZuZahlen = ticketPreis - eingezahlterGesamtbetrag;
+            System.out.printf("Noch zu zahlen: %.2f €\n", nochZuZahlen);
+            System.out.print("Eingabe (mind. 0.05 €, höchstens 2 €): ");
             eingeworfeneMuenze = tastatur.nextDouble();
+
             boolean gueltig =
                     eingeworfeneMuenze == 0.05 ||
                     eingeworfeneMuenze == 0.10 ||
                     eingeworfeneMuenze == 0.20 ||
                     eingeworfeneMuenze == 0.50 ||
                     eingeworfeneMuenze == 1.00 ||
-                    eingeworfeneMuenze == 2.00 ||
-                    eingeworfeneMuenze == 5.00 ||
-                    eingeworfeneMuenze == 10.00 ||
-                    eingeworfeneMuenze == 20.00;
+                    eingeworfeneMuenze == 2.00;
             if (!gueltig) {
-                System.out.println("Ungültige Eingabe! Bitte nur gültige Münzen/Scheine verwenden.\n");
+                System.out.println("Ungültige Eingabe! Bitte nur gültige Münzen verwenden.\n");
                 continue;
             }
 
             eingezahlterGesamtbetrag += eingeworfeneMuenze;
         }
 
+        // Fahrschein ausgeben
         System.out.println("\nFahrschein wird ausgegeben");
         for (int i = 0; i < 8; i++) {
             System.out.print("=");
@@ -62,19 +77,20 @@ class Fahrkartenautomat {
                 e.printStackTrace();
             }
         }
-        System.out.println("\n\n");
+        System.out.println("\n");
 
-        rueckgabebetrag = eingezahlterGesamtbetrag - TicketPreis;
+        // Rückgabebetrag
+        rueckgabebetrag = eingezahlterGesamtbetrag - ticketPreis;
         if (rueckgabebetrag > 0.0) {
-            System.out.printf("Der Rückgabebetrag in Höhe von %.2f Euro\n", rueckgabebetrag);
+            System.out.printf("Der Rückgabebetrag in Höhe von %.2f €\n", rueckgabebetrag);
             System.out.println("wird in folgenden Münzen ausgezahlt:");
 
             while (rueckgabebetrag >= 2.0) {
-                System.out.println("2 Euro");
+                System.out.println("2 €");
                 rueckgabebetrag = Math.round((rueckgabebetrag - 2.0) * 100.0) / 100.0;
             }
             while (rueckgabebetrag >= 1.0) {
-                System.out.println("1 Euro");
+                System.out.println("1 €");
                 rueckgabebetrag = Math.round((rueckgabebetrag - 1.0) * 100.0) / 100.0;
             }
             while (rueckgabebetrag >= 0.5) {
@@ -95,10 +111,11 @@ class Fahrkartenautomat {
             }
         }
 
-        System.out.println("\nVergessen Sie nicht, den Fahrschein\n" +
-                "vor Fahrtantritt entwerten zu lassen!\n" +
-                "Wir wünschen Ihnen eine gute Fahrt.");
+        System.out.println("\nVergessen Sie nicht, den Fahrschein vor Fahrtantritt entwerten zu lassen!");
+        System.out.println("Wir wünschen Ihnen eine gute Fahrt.");
 
         tastatur.close();
     }
 }
+
+
