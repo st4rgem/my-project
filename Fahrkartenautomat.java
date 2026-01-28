@@ -1,8 +1,8 @@
 import java.util.Scanner;
 
 class Fahrkartenautomat {
-    /**
-     * A5.4: Fahrkartenauswahl
+    /*
+     * A5.5: Fahrkarten kombinieren
      */
     public static void main(String[] args) {
 
@@ -10,44 +10,65 @@ class Fahrkartenautomat {
         int ticketWahl;
         int anzahlTickets;
         double ticketPreis = 0.0;
+        double gesamtPreis = 0.0;
         double eingezahlterGesamtbetrag = 0.0;
         double eingeworfeneMuenze;
         double rueckgabebetrag;
         double nochZuZahlen;
 
-        System.out.println("Wählen Sie ihre Wunschfahrkarte für Berlin AB aus:");
-        System.out.println("  Kurzstrecke AB [2,00 EUR] (1)");
-        System.out.println("  Einzelfahrschein AB [3,00 EUR] (2)");
-        System.out.println("  Tageskarte AB [8,80 EUR] (3)");
-        System.out.println("  4-Fahrten-Karte AB [9,40 EUR] (4)");
+        boolean zahlen = false;
 
-        // Ticketart auswählen
-        do {
+        while (!zahlen) {
+            // Menü anzeigen
+            System.out.println("\nWählen Sie ihre Wunschfahrkarte für Berlin AB aus:");
+            System.out.println("  Kurzstrecke AB [2,00 EUR] (1)");
+            System.out.println("  Einzelfahrschein AB [3,00 EUR] (2)");
+            System.out.println("  Tageskarte AB [8,80 EUR] (3)");
+            System.out.println("  4-Fahrten-Karte AB [9,40 EUR] (4)");
+            System.out.println("  Bezahlen (9)");
+
             System.out.print("Ihre Wahl: ");
             ticketWahl = tastatur.nextInt();
+
             switch (ticketWahl) {
                 case 1 -> ticketPreis = 2.00;
                 case 2 -> ticketPreis = 3.00;
                 case 3 -> ticketPreis = 8.80;
                 case 4 -> ticketPreis = 9.40;
-                default -> System.out.println(">> falsche Eingabe <<");
+                case 9 -> {
+                    if (gesamtPreis == 0.0) {
+                        System.out.println("Bitte wählen Sie zunächst mindestens ein Ticket aus!");
+                        continue;
+                    }
+                    zahlen = true;
+                    break;
+                }
+                default -> {
+                    System.out.println(">> falsche Eingabe << Bitte wählen Sie eine gültige Option.");
+                    continue;
+                }
             }
-        } while (ticketWahl < 1 || ticketWahl > 4);
 
-        // Anzahl der Tickets eingeben (1-10)
-        do {
-            System.out.print("Anzahl der Tickets (1-10): ");
-            anzahlTickets = tastatur.nextInt();
-            if (anzahlTickets < 1 || anzahlTickets > 10) {
-                System.out.println("Ungültige Eingabe! Bitte eine Zahl zwischen 1 und 10 eingeben.\n");
+            // Ticketauswahl bearbeiten, wenn nicht „Bezahlen“
+            if (ticketWahl >= 1 && ticketWahl <= 4) {
+                // Anzahl der Tickets eingeben
+                do {
+                    System.out.print("Anzahl der Tickets (1-10): ");
+                    anzahlTickets = tastatur.nextInt();
+                    if (anzahlTickets < 1 || anzahlTickets > 10) {
+                        System.out.println("Ungültige Eingabe! Bitte eine Zahl zwischen 1 und 10 eingeben.\n");
+                    }
+                } while (anzahlTickets < 1 || anzahlTickets > 10);
+
+                // Zwischensumme aktualisieren
+                gesamtPreis += ticketPreis * anzahlTickets;
+                System.out.printf("Zwischensumme: %.2f €\n", gesamtPreis);
             }
-        } while (anzahlTickets < 1 || anzahlTickets > 10);
-
-        ticketPreis *= anzahlTickets;
+        }
 
         // Bezahlvorgang
-        while (eingezahlterGesamtbetrag < ticketPreis) {
-            nochZuZahlen = ticketPreis - eingezahlterGesamtbetrag;
+        while (eingezahlterGesamtbetrag < gesamtPreis) {
+            nochZuZahlen = gesamtPreis - eingezahlterGesamtbetrag;
             System.out.printf("Noch zu zahlen: %.2f €\n", nochZuZahlen);
             System.out.print("Eingabe (mind. 0.05 €, höchstens 2 €): ");
             eingeworfeneMuenze = tastatur.nextDouble();
@@ -80,7 +101,7 @@ class Fahrkartenautomat {
         System.out.println("\n");
 
         // Rückgabebetrag
-        rueckgabebetrag = eingezahlterGesamtbetrag - ticketPreis;
+        rueckgabebetrag = eingezahlterGesamtbetrag - gesamtPreis;
         if (rueckgabebetrag > 0.0) {
             System.out.printf("Der Rückgabebetrag in Höhe von %.2f €\n", rueckgabebetrag);
             System.out.println("wird in folgenden Münzen ausgezahlt:");
@@ -116,6 +137,5 @@ class Fahrkartenautomat {
 
         tastatur.close();
     }
+
 }
-
-
